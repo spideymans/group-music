@@ -5,6 +5,7 @@ import { WebSocketService } from './web-socket.service';
 import { interval } from 'rxjs';
 import { filter, map } from 'rxjs/operators'
 import { HttpClient } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -38,7 +39,7 @@ export class AppComponent implements OnInit {
     }
   ];
 
-  constructor(private webSocketService: WebSocketService, private httpClient: HttpClient) { 
+  constructor(private webSocketService: WebSocketService, private httpClient: HttpClient, private toastr: ToastrService) { 
 
   }
 
@@ -46,6 +47,10 @@ export class AppComponent implements OnInit {
     console.log("Initializing connection");
     this.webSocketService.listen('test event').subscribe((data) => { 
       console.log(`Connected with id: ${this.webSocketService.socket.id}`)
+      this.toastr.success('Connection Successful', null, {
+        closeButton: true,
+        positionClass:'bottom-left'
+      });
     });
 
   this.webSocketService.listen("playEvent").subscribe((data) => {
