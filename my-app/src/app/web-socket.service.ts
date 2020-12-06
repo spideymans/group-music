@@ -7,7 +7,7 @@ import { io } from 'socket.io-client';
 })
 export class WebSocketService {
 
-  port = 4501;
+  port = 4503;
   socket: any;
   readonly uri: string = `ws://localhost:${this.port}`;
 

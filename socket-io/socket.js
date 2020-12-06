@@ -9,7 +9,7 @@ var io = require('socket.io')(server, {
     }
   });
 
-let port = 4501;
+let port = 4503;
 
 app.use(cors());
 app.use(express.static('public')); // To serve the static items in /public
@@ -55,47 +55,47 @@ app.post('/', async (req, res) => {
 
 
 io.on('connection', function(socket) { 
-    console.log("A user connected");
+    console.log(`A user connected with ID`, socket.id);
 
     socket.emit('test event', 'here is some data');
 
-    socket.on("playEvent", () => { 
-      console.log("Emitting play event");
-      socket.broadcast.emit("playEvent");
+    socket.on("playEvent", (data) => { 
+      console.log(`Emitting playEvent to all clients. Sender: ${data.senderID}`);
+      socket.broadcast.emit("playEvent", { senderID: data.senderID });
     })
 
-    socket.on("pauseEvent", () => { 
-      console.log("Emitting play event");
-      socket.broadcast.emit("pauseEvent");
+    socket.on("pauseEvent", (data) => { 
+      console.log(`Emitting pauseEvent to all clients. Sender: ${data.senderID}`);
+      socket.broadcast.emit("pauseEvent", { senderID: data.senderID });
     })
 
-    socket.on("nextEvent", () => { 
-      console.log("Emitting next event");
-      socket.broadcast.emit("nextEvent");
+    socket.on("nextEvent", (data) => { 
+      console.log(`Emitting nextEvent to all clients. Sender: ${data.senderID}`);
+      socket.broadcast.emit("nextEvent", { senderID: data.senderID });
     })
 
-    socket.on("previousEvent", () => { 
-      console.log("Emitting previous event");
-      socket.broadcast.emit("previousEvent");
+    socket.on("previousEvent", (data) => { 
+      console.log(`Emitting previousEvent to all clients. Sender: ${data.senderID}`);
+      socket.broadcast.emit("previousEvent", { senderID: data.senderID });
     })
 
     socket.on("sample message", () => { 
-      console.log("Emitting sample message");
+      console.log(`Emitting sample message to all clients.`);
       socket.broadcast.emit("sample message");
     })
 
     socket.on("seekEvent", (newTime) => { 
-      console.log(`Emitting seek event message ${newTime}`);
+      console.log(`Emitting seekEvent to all clients. Sender: ${socket.id}`);
       socket.broadcast.emit("seekEvent");
     })
 
-    socket.on("deleteEvent", (id) => { 
-      console.log(`Emitting a delete event for item with id ${id}`);
+    socket.on("deleteEvent", (data) => { 
+      console.log(`Emitting deleteEvent to all clients. Sender: ${data.senderID}`);
       socket.broadcast.emit("deleteEvent", id);
     })
 
-    socket.on("addEvent", (item) => { 
-      console.log(`Emitting a add event for item ${item.title}`);
+    socket.on("addEvent", (data) => { 
+      console.log(`Emitting addEvent to all clients. Sender: ${data.senderID}`);
       socket.broadcast.emit("addEvent", item);
     })
     

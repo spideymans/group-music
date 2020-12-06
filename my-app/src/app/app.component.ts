@@ -43,37 +43,33 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() { 
-    console.log("INIT!");
+    console.log("Initializing connection");
     this.webSocketService.listen('test event').subscribe((data) => { 
-    console.log(data);
-  });
+      console.log(`Connected with id: ${this.webSocketService.socket.id}`)
+    });
 
   this.webSocketService.listen("playEvent").subscribe((data) => {
-    console.log("Play event recieved!");
-    if (!this.filterEvents) { 
-      this.musicPlayerComponent.play();
-    }
-  });
+    console.log(`playEvent recieved. Sender: ${data.senderID}`);
+    this.timeout();
+    this.musicPlayerComponent.play();
+    });
 
   this.webSocketService.listen("pauseEvent").subscribe((data) => {
-    console.log("Pause event recieved!");
-    if(!this.filterEvents) {
-      this.musicPlayerComponent.pause();
-    }
+    console.log(`pauseEvent recieved. Sender: ${data.senderID}`);
+    this.timeout();
+    this.musicPlayerComponent.pause();
   });
 
   this.webSocketService.listen("nextEvent").subscribe((data) => {
-    console.log("Next event recieved!");
-    if(!this.filterEvents) {
-      this.musicPlayerComponent.nextAudio();
-    }
+    console.log(`nextEvent recieved. Sender: ${data.senderID}`);
+    this.timeout();
+    this.musicPlayerComponent.nextAudio();
   });
 
   this.webSocketService.listen("previousEvent").subscribe((data) => {
-    console.log("Previous event recieved!");
-    if(!this.filterEvents) {
-      this.musicPlayerComponent.previousAudio();
-    }
+    console.log(`previousEvent recieved. Sender: ${data.senderID}`);
+    this.timeout();
+    this.musicPlayerComponent.previousAudio();
   });
 
   this.webSocketService.listen("seekEvent").subscribe((data) => {
@@ -101,23 +97,31 @@ export class AppComponent implements OnInit {
   }
 
   playEvent() {
-    this.webSocketService.emit("playEvent", null);
-    this.timeout();
+    if (!this.filterEvents) { 
+      console.log("Emitting playEvent")
+      this.webSocketService.emit("playEvent", { senderID: this.webSocketService.socket.id });
+    }
   }
 
-  pauseEvent() { 
-    this.webSocketService.emit("pauseEvent", null);
-    this.timeout();
+  pauseEvent() {
+    if (!this.filterEvents) {
+      console.log("Emitting pauseEvent")
+      this.webSocketService.emit("pauseEvent", { senderID: this.webSocketService.socket.id });
+    }
   }
 
   nextEvent() { 
-    this.webSocketService.emit("nextEvent", null);
-    this.timeout();
+    if (!this.filterEvents) { 
+      console.log("Emitting nextEvent")
+      this.webSocketService.emit("nextEvent", { senderID: this.webSocketService.socket.id });
+    }
   }
 
-  previousEvent() { 
-    this.webSocketService.emit("previousEvent", null);
-    this.timeout();
+  previousEvent() {
+    if (!this.filterEvents) { 
+      console.log("Emitting previousEvent")
+      this.webSocketService.emit("previousEvent", { senderID: this.webSocketService.socket.id });
+    }
   }
 
   seekEvent() {
@@ -127,14 +131,14 @@ export class AppComponent implements OnInit {
   }
 
   sendMsg() { 
-    this.webSocketService.emit("sample message", null);
+    this.webSocketService.emit("sample message", { senderID: this.webSocketService.socket.id });
   }
   
   timeout() { 
     this.filterEvents = true;
     setInterval(()=>{
       this.filterEvents = false;
-    }, 1000)
+    }, 400)
   }
 
   addToQueue(title: String, url: String) {
@@ -145,13 +149,13 @@ export class AppComponent implements OnInit {
       cover: "https://i1.sndcdn.com/artworks-000249294066-uow7s0-t500x500.jpg"
     };
     this.audioList.push(item);
-    this.webSocketService.emit("addEvent", item);
+    this.webSocketService.emit("addEvent", { senderID: this.webSocketService.socket.id });
   }
   
   delete(id: number) { 
     console.log("DELETE" + id);
     this.audioList = this.audioList.filter((element) => element.id != id)
-    this.webSocketService.emit("deleteEvent", id);
+    this.webSocketService.emit("deleteEvent", { senderID: this.webSocketService.socket.id });
   }
 
   handleFileInput(files: FileList) {
