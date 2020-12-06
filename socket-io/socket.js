@@ -9,7 +9,7 @@ var io = require('socket.io')(server, {
     }
   });
 
-let port = 4510;
+let port = parseInt(process.argv.slice(2));
 
 app.use(cors());
 app.use(express.static('public')); // To serve the static items in /public
