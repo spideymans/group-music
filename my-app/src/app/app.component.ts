@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
   @ViewChild(AngMusicPlayerComponent) musicPlayerComponent: AngMusicPlayerComponent;
   filterEvents: boolean = false;
   fileToUpload: File = null;
+  public userName = ""
   audioList: QueueItem[] = [
     {
       id: 1,
@@ -57,24 +58,28 @@ export class AppComponent implements OnInit {
     console.log(`playEvent recieved. Sender: ${data.senderID}`);
     this.timeout();
     this.musicPlayerComponent.play();
+    this.toast(`${data.userName} played`)
     });
 
   this.webSocketService.listen("pauseEvent").subscribe((data) => {
     console.log(`pauseEvent recieved. Sender: ${data.senderID}`);
     this.timeout();
     this.musicPlayerComponent.pause();
+    this.toast(`${data.userName} paused`)
   });
 
   this.webSocketService.listen("nextEvent").subscribe((data) => {
     console.log(`nextEvent recieved. Sender: ${data.senderID}`);
     this.timeout();
     this.musicPlayerComponent.nextAudio();
+    this.toast(`${data.userName} skipped`)
   });
 
   this.webSocketService.listen("previousEvent").subscribe((data) => {
     console.log(`previousEvent recieved. Sender: ${data.senderID}`);
     this.timeout();
     this.musicPlayerComponent.previousAudio();
+    this.toast(`${data.userName} played previous song`)
   });
 
   this.webSocketService.listen("seekEvent").subscribe((data) => {
@@ -102,30 +107,31 @@ export class AppComponent implements OnInit {
   }
 
   playEvent() {
+    console.log(this.userName)
     if (!this.filterEvents) { 
       console.log("Emitting playEvent")
-      this.webSocketService.emit("playEvent", { senderID: this.webSocketService.socket.id });
+      this.webSocketService.emit("playEvent", { senderID: this.webSocketService.socket.id, userName: this.userName });
     }
   }
 
   pauseEvent() {
     if (!this.filterEvents) {
       console.log("Emitting pauseEvent")
-      this.webSocketService.emit("pauseEvent", { senderID: this.webSocketService.socket.id });
+      this.webSocketService.emit("pauseEvent", { senderID: this.webSocketService.socket.id, userName: this.userName });
     }
   }
 
   nextEvent() { 
     if (!this.filterEvents) { 
       console.log("Emitting nextEvent")
-      this.webSocketService.emit("nextEvent", { senderID: this.webSocketService.socket.id });
+      this.webSocketService.emit("nextEvent", { senderID: this.webSocketService.socket.id, userName: this.userName });
     }
   }
 
   previousEvent() {
     if (!this.filterEvents) { 
       console.log("Emitting previousEvent")
-      this.webSocketService.emit("previousEvent", { senderID: this.webSocketService.socket.id });
+      this.webSocketService.emit("previousEvent", { senderID: this.webSocketService.socket.id, userName: this.userName });
     }
   }
 
@@ -161,7 +167,8 @@ export class AppComponent implements OnInit {
     console.log("DELETE" + songID);
     this.audioList = this.audioList.filter((element) => element.id != songID)
     this.webSocketService.emit("deleteEvent", { senderID: this.webSocketService.socket.id,
-                                                songID: songID });
+                                                songID: songID,
+                                                userName: this.userName });
   }
 
   handleFileInput(files: FileList) {
@@ -178,6 +185,13 @@ export class AppComponent implements OnInit {
 
         this.addToQueue(file.name ,`http://localhost:${this.webSocketService.port}/${file.name}`)
       })
+  }
+
+  toast(text: string) { 
+    this.toastr.success(text, null, {
+      closeButton: true,
+      positionClass:'bottom-left'
+    });
   }
 }
 

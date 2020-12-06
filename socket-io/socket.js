@@ -61,22 +61,22 @@ io.on('connection', function(socket) {
 
     socket.on("playEvent", (data) => { 
       console.log(`Emitting playEvent to all clients. Sender: ${data.senderID}`);
-      socket.broadcast.emit("playEvent", { senderID: data.senderID });
+      socket.broadcast.emit("playEvent", data);
     })
 
     socket.on("pauseEvent", (data) => { 
       console.log(`Emitting pauseEvent to all clients. Sender: ${data.senderID}`);
-      socket.broadcast.emit("pauseEvent", { senderID: data.senderID });
+      socket.broadcast.emit("pauseEvent", data);
     })
 
     socket.on("nextEvent", (data) => { 
       console.log(`Emitting nextEvent to all clients. Sender: ${data.senderID}`);
-      socket.broadcast.emit("nextEvent", { senderID: data.senderID });
+      socket.broadcast.emit("nextEvent", data);
     })
 
     socket.on("previousEvent", (data) => { 
       console.log(`Emitting previousEvent to all clients. Sender: ${data.senderID}`);
-      socket.broadcast.emit("previousEvent", { senderID: data.senderID });
+      socket.broadcast.emit("previousEvent", data);
     })
 
     socket.on("sample message", () => { 

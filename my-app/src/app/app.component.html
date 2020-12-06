@@ -299,6 +299,8 @@
 </style> -->
 
 <!-- Toolbar -->
+<label for="usernamInput">Enter a username: </label>
+<input [(ngModel)]="userName" id="usernameInput" type="text">
 <ang-music-player [audioList] = audioList
                   (playEvent)="playEvent()"
                   (pauseEvent)="pauseEvent()"
