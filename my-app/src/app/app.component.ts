@@ -79,9 +79,9 @@ export class AppComponent implements OnInit {
     // }dr
   });
 
-  this.webSocketService.listen("deleteEvent").subscribe((id) => { 
-    console.log(`Delete event recieved for id ${id}`)
-    this.audioList = this.audioList.filter((element) => element.id != id)
+  this.webSocketService.listen("deleteEvent").subscribe((data) => { 
+    console.log(`Delete event recieved for song with ID ${data.songID}. Sender: ${data.senderID}`)
+    this.audioList = this.audioList.filter((element) => element.id != data.songID)
   })
 
   this.webSocketService.listen("addEvent").subscribe((metadata) => { 
@@ -136,9 +136,9 @@ export class AppComponent implements OnInit {
   
   timeout() { 
     this.filterEvents = true;
-    setInterval(()=>{
+    setTimeout(()=>{
       this.filterEvents = false;
-    }, 400)
+    }, 250)
   }
 
   addToQueue(title: String, url: String) {
@@ -149,13 +149,14 @@ export class AppComponent implements OnInit {
       cover: "https://i1.sndcdn.com/artworks-000249294066-uow7s0-t500x500.jpg"
     };
     this.audioList.push(item);
-    this.webSocketService.emit("addEvent", { senderID: this.webSocketService.socket.id });
+    this.webSocketService.emit("addEvent", item);
   }
   
-  delete(id: number) { 
-    console.log("DELETE" + id);
-    this.audioList = this.audioList.filter((element) => element.id != id)
-    this.webSocketService.emit("deleteEvent", { senderID: this.webSocketService.socket.id });
+  delete(songID: number) { 
+    console.log("DELETE" + songID);
+    this.audioList = this.audioList.filter((element) => element.id != songID)
+    this.webSocketService.emit("deleteEvent", { senderID: this.webSocketService.socket.id,
+                                                songID: songID });
   }
 
   handleFileInput(files: FileList) {

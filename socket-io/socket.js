@@ -9,7 +9,7 @@ var io = require('socket.io')(server, {
     }
   });
 
-let port = 4503;
+let port = 4510;
 
 app.use(cors());
 app.use(express.static('public')); // To serve the static items in /public
@@ -91,12 +91,13 @@ io.on('connection', function(socket) {
 
     socket.on("deleteEvent", (data) => { 
       console.log(`Emitting deleteEvent to all clients. Sender: ${data.senderID}`);
-      socket.broadcast.emit("deleteEvent", id);
+      socket.broadcast.emit("deleteEvent", {songID: data.songID,
+                                            senderID: data.senderID});
     })
 
     socket.on("addEvent", (data) => { 
-      console.log(`Emitting addEvent to all clients. Sender: ${data.senderID}`);
-      socket.broadcast.emit("addEvent", item);
+      // console.log(`Emitting addEvent to all clients. Sender: ${data.senderID}`);
+      socket.broadcast.emit("addEvent", data);
     })
     
 })
