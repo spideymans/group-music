@@ -301,7 +301,8 @@
 <!-- Toolbar -->
 <label for="usernamInput">Enter a username: </label>
 <input [(ngModel)]="userName" id="usernameInput" type="text">
-<ang-music-player [audioList] = audioList
+<ang-music-player *ngIf="this.audioList.length >= 1"
+                  [audioList] = audioList
                   (playEvent)="playEvent()"
                   (pauseEvent)="pauseEvent()"
                   (nextEvent)="nextEvent()"

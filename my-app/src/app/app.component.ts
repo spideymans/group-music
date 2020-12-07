@@ -19,26 +19,7 @@ export class AppComponent implements OnInit {
   filterEvents: boolean = false;
   fileToUpload: File = null;
   public userName = ""
-  audioList: QueueItem[] = [
-    {
-      id: 1,
-      url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-      title: "Smaple 1",
-      cover: "https://i1.sndcdn.com/artworks-000249294066-uow7s0-t500x500.jpg"
-    },
-    {
-      id: 2,
-      url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
-      title: "Sample 2",
-      cover: "https://i1.sndcdn.com/artworks-000249294066-uow7s0-t500x500.jpg"
-    },
-    {
-      id: 3,
-      url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3",
-      title: "Sample 3",
-      cover: "https://i1.sndcdn.com/artworks-000249294066-uow7s0-t500x500.jpg"
-    }
-  ];
+  audioList: QueueItem[] = [ ];
 
   constructor(private webSocketService: WebSocketService, private httpClient: HttpClient, private toastr: ToastrService) { 
 
@@ -53,6 +34,8 @@ export class AppComponent implements OnInit {
         positionClass:'bottom-left'
       });
     });
+
+    console.log(this.audioList.length >= 1)
 
     // ---- Incoming events ---- 
 
