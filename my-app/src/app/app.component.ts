@@ -54,6 +54,8 @@ export class AppComponent implements OnInit {
       });
     });
 
+    // ---- Incoming events ---- 
+
   this.webSocketService.listen("playEvent").subscribe((data) => {
     console.log(`playEvent recieved. Sender: ${data.senderID}`);
     this.timeout();
@@ -94,9 +96,10 @@ export class AppComponent implements OnInit {
     this.audioList = this.audioList.filter((element) => element.id != data.songID)
   })
 
-  this.webSocketService.listen("addEvent").subscribe((metadata) => { 
-    console.log(`Add event recieved for ${metadata.title}`);
-    this.audioList.push(metadata);
+  this.webSocketService.listen("addEvent").subscribe((data) => { 
+    console.log(`Add event recieved for song with ID ${data.songMetadata.id}. Sender: ${data.senderID}`);
+    this.audioList.push(data.songMetadata);
+    this.toast(`${data.userName} added song.`)
   })
 
   this.webSocketService.listen("sample message").subscribe((data) => {
@@ -105,6 +108,10 @@ export class AppComponent implements OnInit {
   });
 
   }
+
+  
+    // ---- AngMusicPlayer events ---- 
+    // These events are triggered by AngMusicPlayer when the corresponding actions are taken
 
   playEvent() {
     console.log(this.userName)
@@ -145,6 +152,10 @@ export class AppComponent implements OnInit {
     this.webSocketService.emit("sample message", { senderID: this.webSocketService.socket.id });
   }
   
+  /**
+   * Call timeout() before calling play(), pause(), nextAudio() or previousAudio() on AngMusicPlayer.
+   * timeout() will ignore all events emitted by AndMusicPlayer for 25 ms.
+   */
   timeout() { 
     this.filterEvents = true;
     setTimeout(()=>{
@@ -153,18 +164,20 @@ export class AppComponent implements OnInit {
   }
 
   addToQueue(title: String, url: String) {
-    const item: QueueItem = {
+    const metadata: QueueItem = {
       id: Math.floor((Math.random() * 1000000) + 1),
       url: url,
       title: title,
       cover: "https://i1.sndcdn.com/artworks-000249294066-uow7s0-t500x500.jpg"
     };
-    this.audioList.push(item);
-    this.webSocketService.emit("addEvent", item);
+    this.audioList.push(metadata);
+    this.webSocketService.emit("addEvent", {  senderID: this.webSocketService.socket.id,
+                                              userName: this.userName,
+                                              songMetadata: metadata
+                                            });
   }
   
   delete(songID: number) { 
-    console.log("DELETE" + songID);
     this.audioList = this.audioList.filter((element) => element.id != songID)
     this.webSocketService.emit("deleteEvent", { senderID: this.webSocketService.socket.id,
                                                 songID: songID,

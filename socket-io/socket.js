@@ -95,8 +95,8 @@ io.on('connection', function(socket) {
                                             senderID: data.senderID});
     })
 
-    socket.on("addEvent", (data) => { 
-      // console.log(`Emitting addEvent to all clients. Sender: ${data.senderID}`);
+    socket.on("addEvent", (data) => {
+      console.log(`Emitting addEvent to all clients. Sender: ${data.senderID}`);
       socket.broadcast.emit("addEvent", data);
     })
     
