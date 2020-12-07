@@ -94,6 +94,7 @@ export class AppComponent implements OnInit {
   this.webSocketService.listen("deleteEvent").subscribe((data) => { 
     console.log(`Delete event recieved for song with ID ${data.songID}. Sender: ${data.senderID}`)
     this.audioList = this.audioList.filter((element) => element.id != data.songID)
+    this.toast(`${data.userName} deleted a song.`)
   })
 
   this.webSocketService.listen("addEvent").subscribe((data) => { 

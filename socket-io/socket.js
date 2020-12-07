@@ -91,8 +91,7 @@ io.on('connection', function(socket) {
 
     socket.on("deleteEvent", (data) => { 
       console.log(`Emitting deleteEvent to all clients. Sender: ${data.senderID}`);
-      socket.broadcast.emit("deleteEvent", {songID: data.songID,
-                                            senderID: data.senderID});
+      socket.broadcast.emit("deleteEvent", data);
     })
 
     socket.on("addEvent", (data) => {
