@@ -85,10 +85,17 @@ export class AppComponent implements OnInit {
   });
 
   this.webSocketService.listen("seekEvent").subscribe((data) => {
-    console.log("Seek event recieved!");
-    // if(!this.filterEvents) {
-    //   this.musicPlayerComponent.nextAudio();
-    // }dr
+    console.log(`seekEvent recieved. Sender: ${data.senderID}`);
+    // AngMusicPlayer requires the new time to be located in seekAudioValue.target.value. Do not modify the structure of this object.
+    const seekAudioValue = { 
+      target: { 
+        value: data.newTime
+      }
+    }
+
+    this.timeout();
+    this.musicPlayerComponent.seekAudio(seekAudioValue);
+    this.toast(`${data.userName} seeked`)
   });
 
   this.webSocketService.listen("deleteEvent").subscribe((data) => { 
@@ -145,8 +152,10 @@ export class AppComponent implements OnInit {
 
   seekEvent() {
     const newTime = this.musicPlayerComponent.audioPlayer.nativeElement.currentTime;
-    this.webSocketService.emit("seekEvent", newTime);
-    this.timeout();
+    if (!this.filterEvents) { 
+      console.log("Emitting seekEvent");
+      this.webSocketService.emit("seekEvent", { senderID: this.webSocketService.socket.id, userName: this.userName, newTime: newTime });
+    }
   }
 
   sendMsg() { 

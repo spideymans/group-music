@@ -84,9 +84,9 @@ io.on('connection', function(socket) {
       socket.broadcast.emit("sample message");
     })
 
-    socket.on("seekEvent", (newTime) => { 
-      console.log(`Emitting seekEvent to all clients. Sender: ${socket.id}`);
-      socket.broadcast.emit("seekEvent");
+    socket.on("seekEvent", (data) => { 
+      console.log(`Emitting previousEvent to all clients. Sender: ${data.senderID}`);
+      socket.broadcast.emit("seekEvent", data);
     })
 
     socket.on("deleteEvent", (data) => { 
