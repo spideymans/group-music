@@ -45,35 +45,35 @@ export class AppComponent implements OnInit {
 
     // ---- Incoming events ----
 
-    this.webSocketService.listen('playEvent').subscribe((data) => {
+    this.webSocketService.listen('playEvent').subscribe((data: any) => {
       console.log(`playEvent recieved. Sender: ${data.senderID}`);
       this.timeout();
       this.musicPlayerComponent.play();
       this.toast(`${data.userName} played`);
     });
 
-    this.webSocketService.listen('pauseEvent').subscribe((data) => {
+    this.webSocketService.listen('pauseEvent').subscribe((data: any) => {
       console.log(`pauseEvent recieved. Sender: ${data.senderID}`);
       this.timeout();
       this.musicPlayerComponent.pause();
       this.toast(`${data.userName} paused`);
     });
 
-    this.webSocketService.listen('nextEvent').subscribe((data) => {
+    this.webSocketService.listen('nextEvent').subscribe((data: any) => {
       console.log(`nextEvent recieved. Sender: ${data.senderID}`);
       this.timeout();
       this.musicPlayerComponent.nextAudio();
       this.toast(`${data.userName} skipped`);
     });
 
-    this.webSocketService.listen('previousEvent').subscribe((data) => {
+    this.webSocketService.listen('previousEvent').subscribe((data: any) => {
       console.log(`previousEvent recieved. Sender: ${data.senderID}`);
       this.timeout();
       this.musicPlayerComponent.previousAudio();
       this.toast(`${data.userName} played previous song`);
     });
 
-    this.webSocketService.listen('seekEvent').subscribe((data) => {
+    this.webSocketService.listen('seekEvent').subscribe((data: any) => {
       console.log(`seekEvent recieved. Sender: ${data.senderID}`);
       // AngMusicPlayer requires the new time to be located in seekAudioValue.target.value. Do not modify the structure of this object.
       const seekAudioValue = {
@@ -87,7 +87,7 @@ export class AppComponent implements OnInit {
       this.toast(`${data.userName} seeked`);
     });
 
-    this.webSocketService.listen('deleteEvent').subscribe((data) => {
+    this.webSocketService.listen('deleteEvent').subscribe((data: any) => {
       console.log(
         `Delete event recieved for song with ID ${data.songID}. Sender: ${data.senderID}`
       );
@@ -97,7 +97,7 @@ export class AppComponent implements OnInit {
       this.toast(`${data.userName} deleted a song.`);
     });
 
-    this.webSocketService.listen('addEvent').subscribe((data) => {
+    this.webSocketService.listen('addEvent').subscribe((data: any) => {
       console.log(
         `Add event recieved for song with ID ${data.songMetadata.id}. Sender: ${data.senderID}`
       );
