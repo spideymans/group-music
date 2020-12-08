@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require('cors');
 const app = express();
 const fileUpload = require('express-fileupload');
+const fsExtra = require('fs-extra')
 var server = require('http').Server(app);
 var io = require('socket.io')(server, {
     cors: {
@@ -18,6 +19,8 @@ app.use(fileUpload({
 }));
 
 app.options('*', cors());
+
+fsExtra.emptyDirSync('public') // Empty ./public/
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
