@@ -118,7 +118,9 @@ io.on("connection", function (socket) {
     socket.broadcast.emit("addEvent", data);
   });
 });
-
+/**
+ * Start the server at given port number
+ */
 server.listen(port, () => {
   console.log(`Socket.io server is listening on port ${port}.`);
 });
