@@ -20,20 +20,21 @@ export class AppComponent implements OnInit {
   filterEvents: boolean = false;
   fileToUpload: File = null;
   public userName = '';
+  public portNumber = '';
   audioList: QueueItem[] = [];
+  private webSocketService: WebSocketService;
 
-  constructor(
-    private webSocketService: WebSocketService,
-    private httpClient: HttpClient,
-    private toastr: ToastrService
-  ) {}
+  constructor(private httpClient: HttpClient, private toastr: ToastrService) {}
 
-  ngOnInit() {
-    this.setupSocketConnection();
+  ngOnInit() {}
+  
+  connectClicked() {
+    this.setupSocketConnection(parseInt(this.portNumber));
   }
 
-  setupSocketConnection() {
-    console.log('Initializing connection');
+  setupSocketConnection(port: number) {
+    this.webSocketService = new WebSocketService(port);
+
     this.webSocketService.listen('test event').subscribe((data) => {
       console.log(`Connected with id: ${this.webSocketService.socket.id}`);
       this.toastr.success('Connection Successful', null, {
@@ -41,8 +42,6 @@ export class AppComponent implements OnInit {
         positionClass: 'bottom-left',
       });
     });
-
-    console.log(this.audioList.length >= 1);
 
     // ---- Incoming events ----
 

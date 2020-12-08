@@ -1,5 +1,9 @@
-<label for="usernamInput">Enter a username: </label>
+<label for="portInput">Enter a port on localhost to connnect to: </label>
+<input [(ngModel)]="portNumber" id="portInput" type="text">
+<br>
+<label for="usernameInput">Enter a username: </label>
 <input [(ngModel)]="userName" id="usernameInput" type="text">
+<button (click)="connectClicked()">Connect</button>
 <ang-music-player *ngIf="this.audioList.length >= 1"
                   [audioList] = audioList
                   (playEvent)="playEvent()"
