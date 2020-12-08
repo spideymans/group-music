@@ -27,11 +27,18 @@ export class AppComponent implements OnInit {
   constructor(private httpClient: HttpClient, private toastr: ToastrService) {}
 
   ngOnInit() {}
-  
+
+  /**
+   * Triggered when the connect button is clicked in the template.
+   */
   connectClicked() {
     this.setupSocketConnection(parseInt(this.portNumber));
   }
 
+  /**
+   * Sets up the socket connection and event listeners
+   * @param port The port of the coordinator server on localhost
+   */
   setupSocketConnection(port: number) {
     this.webSocketService = new WebSocketService(port);
 
@@ -107,11 +114,10 @@ export class AppComponent implements OnInit {
 
     this.webSocketService.listen('sample message').subscribe((data) => {
       console.log('sample message recieved!');
-      // this.musicPlayerComponent.pause();
     });
   }
 
-  // ---- AngMusicPlayer events ----
+  // ---- AngMusicPlayer events ---- //
   // These events are triggered by AngMusicPlayer when the corresponding actions are taken
 
   playEvent() {
@@ -168,15 +174,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  sendMsg() {
-    this.webSocketService.emit('sample message', {
-      senderID: this.webSocketService.socket.id,
-    });
-  }
-
   /**
    * Call timeout() before calling play(), pause(), nextAudio() or previousAudio() on AngMusicPlayer.
    * timeout() will ignore all events emitted by AndMusicPlayer for 25 ms.
+   * This is necessary to prevent AngMusicPlayer from recursively emitting events when events are
+   * recieved from the coordinator.
    */
   timeout() {
     this.filterEvents = true;
@@ -185,6 +187,11 @@ export class AppComponent implements OnInit {
     }, 250);
   }
 
+  /**
+   * Adds song to shared queue with given title and url
+   * @param title Title of the song added to queue
+   * @param url Media location
+   */
   addToQueue(title: String, url: String) {
     const metadata: QueueItem = {
       id: Math.floor(Math.random() * 1000000 + 1),
@@ -200,6 +207,10 @@ export class AppComponent implements OnInit {
     });
   }
 
+  /**
+   * Deletes song from shared queue with given ID
+   * @param songID 
+   */
   delete(songID: number) {
     this.audioList = this.audioList.filter((element) => element.id != songID);
     this.webSocketService.emit('deleteEvent', {
@@ -209,6 +220,10 @@ export class AppComponent implements OnInit {
     });
   }
 
+  /**
+   * Handles file submission, and uploads file to server
+   * @param files 
+   */
   handleFileInput(files: FileList) {
     const file = files.item(0);
     if (file == null) {
@@ -231,6 +246,10 @@ export class AppComponent implements OnInit {
       });
   }
 
+  /**
+   * Displays toast message with given text
+   * @param text 
+   */
   toast(text: string) {
     this.toastr.success(text, null, {
       closeButton: true,
