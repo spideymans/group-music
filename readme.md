@@ -21,7 +21,7 @@ Clients must connect to the server before the application can be used. To connec
 
 Note that clients can only connect to servers on `localhost`.
 
-If the connection is established, you'll see a green "Connection Successful" toast message in the bottom of the screen.
+Once the connection is established, you'll see a green "Connection Successful" toast message in the bottom of the screen.
 
 Repeat this procedure for however many clients you desire to connect to the server.
 
@@ -30,7 +30,7 @@ Before starting music playback, ensure that all clients are connected to the ser
 
 #### Adding Songs
 
-The music queue will initially be empty. To add a song to the queue, click the "Choose File" button, and select a `MP3` file to add to the queue. Please ensure that this is an `MP3` file (unfortunately we cannot yet play `PDF` files).
+The music queue will initially be empty. To add a song to the queue, click the "Choose File" button, and select a `MP3` file to add to the queue. Please ensure that this is an `MP3` file.
 
 You'll get a toast message when the song is successfully uploaded and added to the queue. All connected clients will have the song added to their queue.
 
